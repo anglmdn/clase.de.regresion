@@ -1,0 +1,20 @@
+##clase de regresión 1
+sample(10000, 35)
+help(sample)
+
+### vamos a crear una base de datos###
+###4 variables: nombre, edad, sexo, tipo de educación###
+nombres<-c("sergio", "alan", "betzabeth", "judith", "rodrigo", "eric", "diego", "angel")
+edad<-c(36,20,23,20,21,21,22,21)
+sexo<-c("hombre", "hombre","mujer","mujer","hombre","hombre","hombre","hombre")
+educ<-c("publica","publica","publica","publica","privada","publica","publica","publica")
+
+##generamos una base en forma e matriz##
+base1<-data.frame(nombres, edad, sexo, educ)
+#funcion table para conocer la frecuencia de difentes variables
+table(base1$edad)
+table(base1$educ)
+attach(base1)
+table(edad)
+detach(base1)
+summary(base1$edad)
