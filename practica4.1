@@ -1,0 +1,17 @@
+http://www.inegi.org.mx/est/contenidos/proyectos/encuestas/hogares/default.aspx
+enoe
+microdatos
+2t2015
+descriptor de archivos
+
+require(foreign)
+setwd("C://Users//SALA-C21//Desktop//Regresión//SDEMT215.dbf")
+SDEMT215<-data.frame(read.dbf("SDEMT215.dbf"))
+
+Entidades<-subset(SDEMT215, SDEMT215$ENT==25|SDEMT215$ENT==32))
+Entidades$ENT<-as.character(as.numeric(Entidades2$ENT))
+
+
+Entidades$ENT<-factor(Entidades$ENT, levels=c(25, 32), labels=c("Sinaloa", "Zacatecas"))
+Entidades$SEX<-factor(Entidades$SEX,levels = c(1,2),labels = c("Hombre","Mujer"))
+Entidades$POS_OCU<-factor(Entidades$POS_OCU,levels = c(1,2,3,4,5),labels = c("Subordinados y remunerados","Empleadores","Cuenta propia","Sin pago","NE"))
