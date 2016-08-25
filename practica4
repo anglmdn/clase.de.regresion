@@ -1,0 +1,8 @@
+install.packages("XLConnect")
+require(XLConnect)
+wb<-loadWorkbook("ruta-paraelarchivo", create=TRUE)
+createSheet(wb, name="Sexo")
+writeWorksheet(wb, tabla1, "Sexo", startRow=1, startCol=2, header=TRUE)
+createSheet(wb, name="COND. DE OCUP")
+writeWorksheet(wb, tabla2, "COND. DE COUP", startRow=1, startCol=2, header=TRUE)
+CREATEsHEET(WB, name="POBLACION ACTIVA")
