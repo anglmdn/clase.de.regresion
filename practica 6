@@ -1,0 +1,35 @@
+ summary(mod1)$coefficients
+      summary(mod1)
+      #se tiene un ajuste
+      esta=.9323+.0023 eco
+      ###los valores de pvalue son inferiores a .05 por lo que...
+      #1)la relacion lineal entre la variable dependiente y la independiente es positiva
+      #por cada peso de ingreso que aumenta el padre o madre
+      #, aumenta la estatura en .0023
+      ##el error estandar residual es .0198 este valor es muy importante
+      #debido a que permite medir la calidad del moelo
+      #con este error generamos los intervalos de confianza
+      #los IC nos permiten complementar la informacion de las estimaciones
+      #para calculas IC se utiliza
+      confint(mod1, level=.95)
+      #interpretacion...con una probabilidad de 95% b0
+      #se encuentra en el intervalo (.8442,1.0105)
+      #y B1 SE ENCUENTRA EN EL INTERVALO (.0017,.0029)
+      ##BONDAD DE AJUSTE##
+      #con la bonda de ajuste verificamos la calidad del modelo
+      #al interpretar la variable dependiente para eso se utiliza la tabla anova
+      anova(mod1)
+      #en este caso la variabilidad del modelo es .033022=SSM
+      #se revisa la SSR =.0031
+      ##revisando los valores del summary el estadistico F es mayor a 1 y p-value<.05
+      ##con estas revisiones se puede mencionar que se rechaza
+      #la hipotesis nula F=1
+      #y se puede establecer un modelo
+      
+      
+      summary(mod1)$multiple r-squared
+      #Revisar r^2 multiple
+      #alredor del 91% de la variabilidad de la estatura
+      #es explicada por la recta ajustada
+      
+     
