@@ -1,0 +1,75 @@
+install.packages("car")
+base1<-data.frame(eco, esta)
+View(base1)
+
+base1$ajuste.mod1<-filter(mod1)#valores ajustados
+base1$residuales.mod1<-residuals(mod1)#residuos estandarizados
+base1$restudent.mod1<-rstudent(mod1) #residuos estandarizados
+
+View(base1)
+
+#estas bases se utilizan para comprobar los supuestos
+#supuestos de nomralidad es que los residuos tengan una distribucion normal
+#para conocer la normalidad se utiliza la prueba shapiro
+
+shapiro.test(base1$restudent.mod1)
+
+#prueba de shapiro
+#h0 la prueba tiene una distribucion normal
+#h1 la prueba no tiene una distribucion normal
+
+#tenemos un pvalue de .8172 -> no se rechaza h0
+#por lo tanto hay normalidad
+
+#resultado grafico
+
+qqnorm(base1$rstudent.mod1, main="Normal (0,1)")
+
+qqline(base1$rstudent.mod1)
+
+#prueba de Beurssch
+install.packages("lmtest")
+require(lmtest)
+bptest(mod1)
+
+#con esta prueba esperamos homogeneidad en la varianza
+#h0 si hay homogeneidad
+#ha no hay homogeneidad
+#obtenemos un valor de .6108
+#no se recheza la hipotesis nula
+#se acepta con 95% de confianza la h0
+# para eso necesitamos un pvalue mayor a .05 por lo que para mod 1 se puede decir
+#que hay homogeneidad en las varianzas
+##### prueba de autocoreaccion o independencia
+## se utiliza la prueba Durbin Watson
+#para esta prueba se utiliza 
+require(car)
+dwtest(mod1, alternative="two.sided")
+#ho: no hay autocorreacion en los residuos
+#ha: si hay autocorreacion en los residuos
+#la prueba durbin watson genera un resultado de p value .9142
+###por lo que no se rechaza la hipotesis nula
+##debido a que tenemos un pvalue mayor a .05 ...esto quiere decir
+##que no hay autocorrelacion en los residuos
+##otra forma de evaluar la prueba de durbin watson es con el valor 
+#dedurbin watson que se espera que este en el rango de 1.5 a 2.5
+#si esta dentro de este rango se puede decir que no hay
+# comprobamos de manera grafica
+plot (base$residuales.mod1, pch=35, ylab="residuales", xlab="in")
+ abline(h=cor(base1$esta, base1$eco))
+#en este case se puede ver que tenemos una grafica sin relacion que
+#por lo que estamos esperando 
+##por lo que se confirme que no hay autocorrelacion
+
+
+##para predecir consierando rangos definimos una base con limites
+ limbase1<-seq(min(base1$eco), max(base1$eco), lenght=10)
+ limbase1<-data.frame(limbase1)
+ limbasep<-predict.lm(mod1, limbase1, interval="prediction", se.fit=TRUE, data=base1)
+ 
+ head(limbasep$fit)##te generan los limites
+ 
+ ##para dibujarlos
+ matplot(limbase1, limbasep$fit, type="l", xlab="ingreso", ylab="estatura")
+ 
+ ####investigar como incorporar etiquetas
