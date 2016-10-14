@@ -1,0 +1,36 @@
+setwd ( "C://Users//USUARIO//Desktop")
+SDEMT216<-data.frame (read.dbf ( "sdemt216.dbf"))
+SOCIODEM<-c("CD_A","INGOCUP","SEX","EDA","HRSOCUP","ANIOS_ESC")
+SOCIODEM1<-SDEMT216[,SOCIODEM]
+
+SDM<-subset(SOCIODEM1,(SOCIODEM1$CD_A=="36")&(as.numeric(SOCIODEM1$EDA)>=15 & as.numeric(SOCIODEM1$EDA)<=65)&(as.numeric(SOCIODEM1$INGOCUP)>=1 & as.numeric(SOCIODEM1$INGOCUP)<=30000))
+SDM<-na.omit(SDM)
+SDM<-SDM[,c(-1)]
+
+SDM$INGOCUP<-as.numeric(as.character(SDM$INGOCUP))
+SDM$SEX<-as.numeric(as.character(SDM$SEX))
+SDM$EDA<-as.numeric(as.character(SDM$EDA))
+SDM$HRSOCUP<-as.numeric(as.character(SDM$HRSOCUP))
+SDM$ANIOS_ESC<-as.numeric(as.character(SDM$ANIOS_ESC))
+
+cor(SDM)
+mod<-lm(INGOCUP~SEX+EDA+HRSOCUP+ANIOS_ESC,data = SDM)
+summary(mod)
+
+step(mod,direction = "backward")
+
+anova(mod)
+
+SDM$ajust<-fitted(mod)
+SDM$residual<-residuals(mod)
+SDM$rstud<-rstudent(mod)
+
+
+ks.test(SDM$rstud,"pnorm")
+bptest(mod,studentize = F,data = SDM)
+dwtest(mod,alternative = "two.sided",data = SDM)
+
+
+predic1<-predict(mod, interval = "prediction",se.fit = TRUE,data = SDM)
+
+head(predic1$fit)
