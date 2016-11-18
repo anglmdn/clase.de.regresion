@@ -1,0 +1,65 @@
+ require(foreign)
+require(questionr)
+setwd("C:/Users/angel/OneDrive/Documents/R")
+
+solorural<-data.frame(read.spss("solorural.sav"))
+  
+   library(plyr)  
+  
+nocu<-subset(solorural, solorural$c_ocu=="ocupado")
+
+nocu$eda1<-revalue(factor(nocu$t_per), "4"=NA)
+
+nocu$edad1<- ifelse(as.numeric(nocu$eda)  >= 4 & as.numeric(nocu$eda)<=9,1,
+                   ifelse(as.numeric(nocu$eda)  >= 10 & as.numeric(nocu$eda)<=13,2,
+                          ifelse(as.numeric(nocu$eda)  >= 14 & as.numeric(nocu$eda)<=17,3,
+                                 ifelse(as.numeric(nocu$eda)  >= 18 & as.numeric(nocu$eda)<=90,4,5))))
+
+nocu$edad1<-revalue(factor(nocu$t_per), c("1"="5 a 9", "2"="10 a 13", "3"="14 a 17"))
+
+
+#####Variables a utilizar t_per~ sex+edad1+asis+sex_jefe+escol_jefe+t_apo1+ocu_jefe
+table(nocu$t_per)
+table(nocu$sex)
+table(nocu$eda1)
+table(nocu$asis)
+table(nocu$sex_jefe)
+table(nocu$t_apo1)
+table(nocu$ocu_jefe)
+table(nocu$escol_jefe)
+
+
+nocu$t_per<-revalue(factor(nocu$t_per), c("1"="familiar","2"="No familiar","3"="Cuenta propia","4"=NA))
+table(nocu$t_per)
+
+nocu$escol_jefe<-revalue(factor(nocu$escol_jefe), c("7"=NA))
+
+wtd.table(nocu$t_per, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$sex, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$edad1, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$asis, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$sex_jefe, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$t_apo1, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$ocu_jefe, weights=nocu$fac_mti, na.show=TRUE)
+wtd.table(nocu$escol_jefe, weights=nocu$fac_mti, na.show=TRUE)
+
+require(nnet)
+mod1<-multinom(t_per~1, data=nocu)
+summary(mod1)
+modfin<-multinom(t_per~sex+edad1+asis+sex_jefe+escol_jefe+t_apo1+ocu_jefe, data=nocu)
+g<-summary(modfin,wald=T)
+print(g)
+
+#Residual Deviance: 1419.488 
+#AIC: 1479.488 
+
+###########
+
+install.packages("stargazer")
+require(stargazer)
+help("stargazer")
+     s<-stargazer(modfin, type='html', title="Coefficients", summary=T)
+stargazer(modfin, type="text", title="mlogit", digit=2, out="C:/Users/angel/OneDrive/Documents/R")
+
+
+
