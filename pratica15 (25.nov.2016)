@@ -1,0 +1,43 @@
+setwd ( "C://Users//Luls//Documents//regresión//Base final")
+GranBaseFinal <-data.frame (read.dbf ( "pobreza_14.dbf"))
+
+bf1 <- subset(GranBaseFinal, GranBaseFinal $ ss_dir == 0)
+
+#####Grupo de Edad ######
+bf1$edad1  <- ifelse(as.numeric(bf1$edad)>= 1 & as.numeric(bf1$edad)<=9,"de 0 a 9",
+              ifelse(as.numeric(bf1$edad)>= 10 & as.numeric(bf1$edad)<=19,"de 10 a 19",
+              ifelse(as.numeric(bf1$edad)>= 20 & as.numeric(bf1$edad)<=29,"de 20 a 29",
+              ifelse(as.numeric(bf1$edad)>= 30 & as.numeric(bf1$edad)<=39,"de 30 a 39",
+              ifelse(as.numeric(bf1$edad)>= 40 & as.numeric(bf1$edad)<=49,"de 40 a 49",
+              ifelse(as.numeric(bf1$edad)>= 50 & as.numeric(bf1$edad)<=59,"de 50 a 59",
+              ifelse(as.numeric(bf1$edad)>= 60 & as.numeric(bf1$edad)<=69,"de 60 a 69",
+              ifelse(as.numeric(bf1$edad)>= 70 & as.numeric(bf1$edad)<=79,"de 70 a 79",
+              ifelse(as.numeric(bf1$edad)>= 80 & as.numeric(bf1$edad)<=89,"de 80 a 89",
+              ifelse(as.numeric(bf1$edad)>= 90 & as.numeric(bf1$edad)<=97,"de 90 a 99",11))))))))))
+
+bf1$niv_ed<-revalue(factor(bf1$niv_ed),c(0="primaria incompleta",1="primaria completa",2="secundaria completa o mayor nivel educativo"))
+
+bf1$inas_esc<-revalue(factor(bf1$inas_esc),c(0="si asiste",1="no asiste"))
+
+bf1$tipo_trab1<- ifelse(as.numeric(bf1$tipo_trab1)== 1 ,"Subordinado",
+                 ifelse(as.numeric(bf1$tipo_trab1)== 2 & as.numeric(bf1$tipo_trab1)==3,"independiente",4))
+                                                                                                        
+bf1$jub<-revalue(factor(bf1$jub),c(0="No pensionado o jubilado",1="Pensionado o jubilado"))
+
+mod1<- multinom(pobreza_m~1, data =bf1)
+
+
+modelofinal <- multinom (pobreza_m~edad1 +niv_ed +inas_esc +tipo_trab1 +jub, data =bf1)
+                       
+m <-summary(modelofinal, Wald = T)
+                       
+print(m)
+                       
+###### Tabla en latex ######
+                       
+install.packages ( "stargazer")
+require (stargazer)
+                       
+p <-stargazer (modelofinal, type = 'html', title = "Coeficientes", resumen = T)
+                       
+stargazer (modelofinal, type = "text", apply.coef = exp, apply.se = exp, title = "logistica regresión", dígitos = 2)
